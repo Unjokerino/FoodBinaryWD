@@ -10,4 +10,10 @@ export default {
   },
   isSmallDevice: width < 375,
   horizontalSpacing: 30,
+  spacing: {
+    small: 7,
+    medium: 14,
+    large: 21,
+    xLarge: 28,
+  },
 };

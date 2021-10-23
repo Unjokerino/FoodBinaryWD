@@ -17,6 +17,8 @@ export default function useCachedResources() {
           ...FontAwesome.font,
           "space-mono": require("../assets/fonts/SpaceMono-Regular.ttf"),
           Nunito: require("../assets/fonts/Nunito-Regular.ttf"),
+          NunitoExtraBold: require("../assets/fonts/Nunito-ExtraBold.ttf"),
+          NunitoBlack: require("../assets/fonts/Nunito-Black.ttf"),
           Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
         });
       } catch (e) {

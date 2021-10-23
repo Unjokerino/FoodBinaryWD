@@ -2,8 +2,11 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   title: {
-    fontFamily: "Nunito",
+    fontFamily: "NunitoExtraBold",
     fontSize: 20,
-    fontWeight: "bold",
+  },
+  h1: {
+    fontFamily: "NunitoBlack",
+    fontSize: 22,
   },
 });
