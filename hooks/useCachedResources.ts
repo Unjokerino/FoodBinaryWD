@@ -19,6 +19,7 @@ export default function useCachedResources() {
           Nunito: require("../assets/fonts/Nunito-Regular.ttf"),
           NunitoExtraBold: require("../assets/fonts/Nunito-ExtraBold.ttf"),
           NunitoBlack: require("../assets/fonts/Nunito-Black.ttf"),
+          NunitoBold: require("../assets/fonts/Nunito-Bold.ttf"),
           Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
         });
       } catch (e) {

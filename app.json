@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "HelloWorld",
+    "name": "ДоставкаКо",
     "slug": "Food",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,13 +19,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.binarywd.food"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "versionCode": 1,
+      "package": "com.binarywd.food"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

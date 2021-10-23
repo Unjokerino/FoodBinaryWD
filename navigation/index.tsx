@@ -17,6 +17,7 @@ import { ColorSchemeName, Pressable } from "react-native";
 import Cart from "../assets/Icons/Cart";
 import Chicken from "../assets/Icons/Chicken";
 import HeaderLeft from "../components/HeaderLeft";
+import TabBar from "../components/TabBar";
 import { View, Text } from "../components/Themed";
 import { HOME, TITLE } from "../constants";
 
@@ -98,6 +99,13 @@ function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName={HOME}
+      tabBar={(props) => (
+        <TabBar
+          state={props.state}
+          descriptors={props.descriptors}
+          navigation={props.navigation}
+        />
+      )}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}

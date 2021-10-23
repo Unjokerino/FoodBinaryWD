@@ -9,4 +9,9 @@ export default StyleSheet.create({
     fontFamily: "NunitoBlack",
     fontSize: 22,
   },
+  h3: {
+    fontFamily: "NunitoBold",
+    fontSize: 14,
+  },
+  h4: {},
 });
