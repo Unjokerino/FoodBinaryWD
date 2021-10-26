@@ -10,7 +10,15 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { HOME } from "./constants";
+import {
+  BOTTOM_TAB,
+  FOOD_ITEM,
+  HOME,
+  SEARCH_SCREEN,
+  SHOPING_BAG,
+  USER_SCREEN,
+} from "./constants";
+import { FoodItem } from "./Types";
 
 declare global {
   namespace ReactNavigation {
@@ -22,6 +30,8 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
+  [BOTTOM_TAB]: undefined;
+  [FOOD_ITEM]: { item: FoodItem };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -29,6 +39,9 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 
 export type RootTabParamList = {
   [HOME]: undefined;
+  [SEARCH_SCREEN]: undefined;
+  [SHOPING_BAG]: undefined;
+  [USER_SCREEN]: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =

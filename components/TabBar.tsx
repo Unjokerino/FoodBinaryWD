@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Colors from "../constants/Colors";
+import Layout from "../constants/Layout";
 import { TabItem } from "./TabItem";
 
 export interface TabBarProps {
@@ -94,12 +95,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-    justifyContent: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     alignItems: "center",
     borderRadius: 10,
     flexDirection: "row",
-    marginHorizontal: 10,
+    marginHorizontal: Layout.spacing.xLarge,
     marginVertical: 16,
   },
 

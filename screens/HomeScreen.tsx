@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { View, StyleSheet, TextInput, ScrollView } from "react-native";
 import Search from "../assets/Icons/Search";
 import CategoryCard from "../components/CategoryCard";
@@ -8,16 +8,21 @@ import Layout from "../constants/Layout";
 import Typography from "../constants/Typography";
 import { Text } from "../components/Themed";
 import FoodCard from "../components/FoodCard";
+import { FlatList } from "react-native-gesture-handler";
+//@ts-ignore
+import InsetShadow from "react-native-inset-shadow";
 
 const mockCategories = ["Популярное", "Супы", "Завтраки", "Бургеры"];
 const mockFoodItems = [
   {
+    id: "1",
     image: "https://www.moi-povar.ru/upload/iblock/598/IMG_3622.jpg",
     name: "Суп фасолевый",
     weight: 400,
     price: 150,
   },
   {
+    id: "2",
     image: "https://recipes.av.ru//media/recipes/102065_picture_7TfI08J.jpg",
     name: "Суп сырный",
     weight: 450,
@@ -27,64 +32,82 @@ const mockFoodItems = [
 
 export default function HomeScreen() {
   const [currentCategoryIndex, setSurrentCategoryIndex] = useState(0);
+  const [shadowShown, setShadowShown] = useState(true);
   return (
-    <ScrollView
-      contentContainerStyle={{ paddingBottom: 30 }}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.container}>
-        <View style={styles.searchContainer}>
-          <Search />
-          <TextInput
-            placeholder={"Начните поиск здесь"}
-            selectionColor={"#000"}
-            placeholderTextColor={"#D2D2D2"}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.categoryContainer}>
-          <ScrollView
-            style={{ marginHorizontal: -Layout.horizontalSpacing }}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingHorizontal: Layout.horizontalSpacing,
-            }}
-          >
-            {mockCategories.map((categorie, index) => (
-              <CategoryCard
-                isActive={index === currentCategoryIndex}
-                title={categorie}
-                onPress={() => {
-                  setSurrentCategoryIndex(index);
-                }}
+    <View style={{ backgroundColor: Colors.light.background }}>
+      <InsetShadow
+        left={false}
+        right={false}
+        bottom={false}
+        top={shadowShown}
+        elevation={10}
+      >
+        <ScrollView
+          onScroll={(event) => {
+            const scrolling = event.nativeEvent.contentOffset.y;
+            if (scrolling > 0) {
+              setShadowShown(true);
+            } else {
+              setShadowShown(false);
+            }
+          }}
+          contentContainerStyle={{ paddingBottom: 30 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.container}>
+            <View style={styles.searchContainer}>
+              <Search />
+              <TextInput
+                placeholder={"Начните поиск здесь"}
+                selectionColor={"#000"}
+                placeholderTextColor={"#D2D2D2"}
+                style={styles.textInput}
               />
-            ))}
-          </ScrollView>
-          <View style={styles.promoContainer}>
-            <ScrollView
-              style={{ marginHorizontal: -Layout.horizontalSpacing }}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingHorizontal: Layout.horizontalSpacing,
-              }}
-            >
-              <PromoCard />
-            </ScrollView>
+            </View>
+            <View style={styles.categoryContainer}>
+              <ScrollView
+                style={{ marginHorizontal: -Layout.horizontalSpacing }}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingHorizontal: Layout.horizontalSpacing,
+                }}
+              >
+                {mockCategories.map((categorie, index) => (
+                  <CategoryCard
+                    isActive={index === currentCategoryIndex}
+                    title={categorie}
+                    onPress={() => {
+                      setSurrentCategoryIndex(index);
+                    }}
+                  />
+                ))}
+              </ScrollView>
+              <View style={styles.promoContainer}>
+                <FlatList
+                  horizontal
+                  ItemSeparatorComponent={() => (
+                    <View style={{ width: Layout.horizontalSpacing }} />
+                  )}
+                  showsHorizontalScrollIndicator={false}
+                  data={[0, 1]}
+                  renderItem={() => <PromoCard />}
+                />
+              </View>
+              <View style={styles.titleRow}>
+                <Text style={Typography.h1}>Блюда дня</Text>
+                <Text style={Typography.h3}>Каталог</Text>
+              </View>
+              <View style={styles.foodItemContainer}>
+                {mockFoodItems.map((foodItem) => (
+                  <FoodCard key={foodItem.id} {...foodItem} />
+                ))}
+              </View>
+            </View>
           </View>
-          <View style={styles.titleRow}>
-            <Text style={Typography.h1}>Блюда дня</Text>
-            <Text style={Typography.h3}>Каталог</Text>
-          </View>
-          <View style={styles.foodItemContainer}>
-            {mockFoodItems.map((foodItem) => (
-              <FoodCard {...foodItem} />
-            ))}
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+        </ScrollView>
+      </InsetShadow>
+    </View>
   );
 }
 

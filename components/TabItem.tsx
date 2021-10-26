@@ -12,7 +12,7 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
-import { HOME } from "../constants";
+import { HOME, SEARCH_SCREEN, SHOPING_BAG, USER_SCREEN } from "../constants";
 import Colors from "../constants/Colors";
 import { Text } from "./Themed";
 
@@ -32,6 +32,9 @@ export interface TabItemProps {
 
 const ICONS = {
   [HOME]: { name: "home", type: FontAwesome5 },
+  [SEARCH_SCREEN]: { name: "search", type: FontAwesome5 },
+  [SHOPING_BAG]: { name: "shopping-bag", type: FontAwesome5 },
+  [USER_SCREEN]: { name: "user", type: FontAwesome5 },
 };
 
 export const TabItem: React.FC<TabItemProps> = ({
@@ -40,8 +43,8 @@ export const TabItem: React.FC<TabItemProps> = ({
   active,
   onPress,
 }) => {
-  const Icon = ICONS[label].type;
-  const iconName = ICONS[label].name;
+  const Icon = ICONS[label]?.type;
+  const iconName = ICONS[label]?.name;
   const colors = Colors.light;
   const animatedValue = useRef(new Animated.Value(0)).current;
   const activeColor = Colors.light.textReveted;
