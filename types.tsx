@@ -19,6 +19,7 @@ import {
   USER_SCREEN,
 } from "./constants";
 import { FoodItem } from "./Types";
+import { Product } from "./types/store/products";
 
 declare global {
   namespace ReactNavigation {
@@ -31,7 +32,7 @@ export type RootStackParamList = {
   Modal: undefined;
   NotFound: undefined;
   [BOTTOM_TAB]: undefined;
-  [FOOD_ITEM]: { item: FoodItem };
+  [FOOD_ITEM]: { item: Product };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

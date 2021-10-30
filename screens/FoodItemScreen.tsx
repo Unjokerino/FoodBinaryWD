@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import React from "react";
-import { StyleSheet, Image, View } from "react-native";
+import React, { useMemo, useState } from "react";
+import { StyleSheet, Image, View, Pressable } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
@@ -23,13 +23,14 @@ import { StatusBar } from "expo-status-bar";
 import * as Animatable from "react-native-animatable";
 import Typography from "../constants/Typography";
 import { Text } from "../components/Themed";
+import BackButton from "../components/BackButton";
+import Cart from "../assets/Icons/Cart";
+import AmountSwitch from "../components/AmountSwitch";
 
 interface Props {
   route: RouteProp<RootStackParamList, typeof FOOD_ITEM>;
   navigation: NavigationProp<RootStackParamList>;
 }
-
-const height = Layout.window.height;
 
 export default function FoodItemScreen({
   navigation,
@@ -37,64 +38,59 @@ export default function FoodItemScreen({
     params: { item },
   },
 }: Props) {
-  const translateY = useSharedValue(0);
-  const isGestureActive = useSharedValue(false);
-
-  const onGestuerEvent = useAnimatedGestureHandler({
-    onStart: () => {
-      isGestureActive.value = true;
-    },
-    onActive: ({ translationY }) => {
-      translateY.value = translationY;
-    },
-    onEnd: ({ velocityY }) => {
-      const shouldGoBack =
-        snapPoint(translateY.value, velocityY, [0, height]) === height;
-      if (shouldGoBack) {
-        runOnJS(navigation.goBack)();
-      } else {
-        translateY.value = withSpring(0, { velocity: velocityY });
-      }
-      isGestureActive.value = false;
-    },
-  });
-
-  const style = useAnimatedStyle(() => {
-    const scale = interpolate(
-      translateY.value,
-      [0, height],
-      [1, 0.5],
-      Extrapolate.CLAMP
-    );
-    return {
-      flex: 1,
-      transform: [{ translateY: translateY.value }, { scale }],
-    };
-  });
-
-  const borderStyle = useAnimatedStyle(() => ({
-    borderRadius: withTiming(isGestureActive.value ? 40 : 0),
-  }));
+  const [imageOpen, setImageOpen] = useState(false);
 
   return (
     <>
       <StatusBar backgroundColor={Colors.light.cardColor} />
-      <PanGestureHandler onGestureEvent={onGestuerEvent}>
-        <Animated.View style={[style, styles.container, borderStyle]}>
-          <View style={styles.imageContainer}>
-            <SharedElement style={{ flex: 1 }} id={item.id}>
-              <Animated.Image
-                style={[styles.image]}
-                source={{ uri: item.image }}
-              />
-            </SharedElement>
-          </View>
 
-          <Animatable.View animation="bounce" style={styles.infoContainer}>
-            <Text style={[Typography.title, styles.title]}>{item.name}</Text>
-          </Animatable.View>
-        </Animated.View>
-      </PanGestureHandler>
+      <View style={[styles.container]}>
+        <Pressable
+          onPress={() => setImageOpen((prev) => !prev)}
+          style={styles.imageContainer}
+        >
+          <SharedElement style={{ flex: 1 }} id={item.name}>
+            <Animated.Image
+              style={[styles.image]}
+              source={{ uri: item.images[0].src }}
+            />
+          </SharedElement>
+          <View style={styles.header}>
+            <Animatable.View animation="slideInLeft">
+              <BackButton onPress={() => navigation.goBack()} />
+            </Animatable.View>
+            <Animatable.View animation="slideInRight">
+              <Cart />
+            </Animatable.View>
+          </View>
+        </Pressable>
+
+        <Animatable.View
+          style={[styles.infoContainer, { marginTop: imageOpen ? -40 : -0 }]}
+        >
+          <Text style={styles.category}>{item.type}</Text>
+          <Text style={[Typography.title, styles.title]}>{item.name}</Text>
+          <View style={styles.divider}>
+            <View style={styles.rhombus} />
+            <View style={styles.rhombus} />
+          </View>
+          <Text style={[Typography.title, styles.subtitle]}>Описание</Text>
+          <Text style={[Typography.description, styles.description]}>
+            {item.description}
+          </Text>
+          <View style={styles.footer}>
+            <AmountSwitch mode="medium" itemId={item.id} />
+          </View>
+        </Animatable.View>
+        <View
+          style={{
+            paddingVertical: Layout.spacing.medium,
+            paddingHorizontal: Layout.horizontalSpacing,
+          }}
+        >
+          <Text style={Typography.h1}>Рекомендуем с этим товаром</Text>
+        </View>
+      </View>
     </>
   );
 }
@@ -103,10 +99,54 @@ const styles = StyleSheet.create({
   imageContainer: {
     height: 370,
   },
+  subtitle: {
+    fontSize: 16,
+  },
+  category: {
+    alignSelf: "flex-end",
+    position: "absolute",
+    top: -34,
+    right: 32,
+    color: "#302F3C",
+    fontSize: 18,
+  },
+  footer: {
+    marginTop: Layout.spacing.xxxLarge,
+    marginBottom: Layout.spacing.large,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  description: {
+    marginTop: Layout.spacing.xsmall,
+  },
+  divider: {
+    backgroundColor: Colors.light.dividerColor,
+    height: 2,
+    marginTop: Layout.spacing.large,
+    marginBottom: Layout.spacing.medium,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  rhombus: {
+    transform: [{ rotate: "45deg" }],
+    height: 6,
+    width: 6,
+    backgroundColor: Colors.light.dividerColor,
+  },
+  header: {
+    position: "absolute",
+    top: Layout.spacing.xLarge,
+    left: Layout.spacing.large,
+    right: Layout.spacing.large,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   image: { ...StyleSheet.absoluteFillObject, resizeMode: "cover" },
   container: {
     overflow: "hidden",
-    marginTop: Layout.spacing.large,
+    paddingTop: Layout.spacing.large,
     flex: 1,
     backgroundColor: Colors.light.cardColor,
   },
@@ -115,9 +155,9 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     backgroundColor: Colors.light.background,
-    height: 315,
+
     borderRadius: 40,
-    marginTop: -100,
+
     padding: Layout.spacing.large,
   },
 });

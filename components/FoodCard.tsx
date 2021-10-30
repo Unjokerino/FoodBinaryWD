@@ -1,25 +1,27 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 import { View, Image, StyleSheet, Pressable } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
 import { FOOD_ITEM } from "../constants";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 import Typography from "../constants/Typography";
-import { FoodItem, RootStackParamList } from "../Types";
+import { Product } from "../types/store/products";
+import AmountSwitch from "./AmountSwitch";
 import Button from "./Button";
 import { Text } from "./Themed";
 
-export default function FoodCard(item: FoodItem) {
-  const { image, name, weight, price } = item;
+export default function FoodCard(item: Product) {
+  const { images, name, weight, price, id } = item;
   const navigation = useNavigation();
-  const [opacity, setOpacity] = React.useState(1);
+  const [opacity, setOpacity] = useState(1);
 
   useFocusEffect(() => {
     if (navigation.isFocused()) {
       setOpacity(1);
     }
   });
+
   return (
     <Pressable
       style={({ pressed }) => [
@@ -32,14 +34,17 @@ export default function FoodCard(item: FoodItem) {
       }}
     >
       <View style={styles.imageContainer}>
-        <SharedElement style={{ flex: 1 }} id={item.id}>
-          <Image style={[styles.image, { opacity }]} source={{ uri: image }} />
+        <SharedElement style={{ flex: 1 }} id={name}>
+          <Image
+            style={[styles.image, { opacity }]}
+            source={{ uri: images[0].src }}
+          />
         </SharedElement>
       </View>
-      <Button
-        style={{ marginTop: -20, alignSelf: "flex-end", marginRight: 10 }}
-        onPress={() => {}}
-        title={"В корзину"}
+      <AmountSwitch
+        mode="small"
+        style={styles.cartButton}
+        itemId={id.toString()}
       />
       <View style={styles.cardInfo}>
         <Text style={[Typography.title, styles.title]}>{name}</Text>
@@ -68,11 +73,13 @@ const styles = StyleSheet.create({
 
     elevation: 6,
   },
+  cartButton: { marginTop: -22, alignSelf: "flex-end", marginRight: 10 },
   footer: {
     paddingVertical: Layout.spacing.medium,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    flex: 1,
+    alignItems: "flex-end",
   },
   weight: {
     fontFamily: "Nunito",
@@ -90,7 +97,7 @@ const styles = StyleSheet.create({
   },
   cardInfo: {
     paddingHorizontal: Layout.spacing.medium,
-    paddingTop: Layout.spacing.large,
+    flex: 1,
     paddingBottom: Layout.spacing.large,
   },
   title: {

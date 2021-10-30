@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import Colors from "./Colors";
 
 export default StyleSheet.create({
   title: {
@@ -13,5 +14,9 @@ export default StyleSheet.create({
     fontFamily: "NunitoBold",
     fontSize: 14,
   },
-  h4: {},
+  description: {
+    fontFamily: "Nunito",
+    fontSize: 12,
+    color: Colors.light.description,
+  },
 });

@@ -17,5 +17,6 @@ export default {
     large: 21,
     xLarge: 28,
     xxLarge: 35,
+    xxxLarge: 40,
   },
 };

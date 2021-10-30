@@ -122,11 +122,10 @@ function StackNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        gestureEnabled: false,
+        gestureEnabled: true,
         headerShown: false,
         cardOverlayEnabled: true,
         cardStyle: { backgroundColor: "transparent" },
-        presentation: "modal",
       }}
     >
       <Stack.Screen name={BOTTOM_TAB} component={BottomTabNavigator} />
@@ -134,7 +133,13 @@ function StackNavigator() {
         name={FOOD_ITEM}
         component={FoodItemScreen}
         sharedElements={(route) => {
-          return [route.params.item.id];
+          return [
+            {
+              id: route.params.item.name,
+              animation: "fade",
+              align: "right-top",
+            },
+          ];
         }}
       />
       <Stack.Screen name="Modal" component={ModalScreen} />

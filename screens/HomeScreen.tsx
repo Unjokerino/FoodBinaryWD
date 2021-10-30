@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { View, StyleSheet, TextInput, ScrollView } from "react-native";
 import Search from "../assets/Icons/Search";
 import CategoryCard from "../components/CategoryCard";
@@ -11,6 +11,9 @@ import FoodCard from "../components/FoodCard";
 import { FlatList } from "react-native-gesture-handler";
 //@ts-ignore
 import InsetShadow from "react-native-inset-shadow";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "../store/reducers/products";
+import useAppSelector from "../hooks/useAppSelector";
 
 const mockCategories = ["Популярное", "Супы", "Завтраки", "Бургеры"];
 const mockFoodItems = [
@@ -20,6 +23,9 @@ const mockFoodItems = [
     name: "Суп фасолевый",
     weight: 400,
     price: 150,
+    type: "Блюдо дня",
+    description:
+      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts",
   },
   {
     id: "2",
@@ -27,12 +33,22 @@ const mockFoodItems = [
     name: "Суп сырный",
     weight: 450,
     price: 250,
+    type: "Блюдо дня",
+    description:
+      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts",
   },
 ];
 
 export default function HomeScreen() {
   const [currentCategoryIndex, setSurrentCategoryIndex] = useState(0);
   const [shadowShown, setShadowShown] = useState(true);
+  const dispatch = useDispatch();
+  const products = useAppSelector((state) => state.products.products);
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
+
   return (
     <View style={{ backgroundColor: Colors.light.background }}>
       <InsetShadow
@@ -91,6 +107,7 @@ export default function HomeScreen() {
                   )}
                   showsHorizontalScrollIndicator={false}
                   data={[0, 1]}
+                  keyExtractor={(item) => item}
                   renderItem={() => <PromoCard />}
                 />
               </View>
@@ -99,8 +116,8 @@ export default function HomeScreen() {
                 <Text style={Typography.h3}>Каталог</Text>
               </View>
               <View style={styles.foodItemContainer}>
-                {mockFoodItems.map((foodItem) => (
-                  <FoodCard key={foodItem.id} {...foodItem} />
+                {products.map((product) => (
+                  <FoodCard key={product.id} {...product} />
                 ))}
               </View>
             </View>
